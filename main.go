@@ -45,4 +45,9 @@ func main() {
 	} else {
 		fmt.Printf("Found folder: %v", remoteFolder)
 	}
+
+	localFiles := getLocalFiles(*localDir)
+	for _, file := range localFiles {
+		fmt.Printf("%s\t%s\n", file.md5, file.filename)
+	}
 }
