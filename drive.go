@@ -14,9 +14,12 @@ func getFolderByName(service *drive.Service, name string) *drive.File {
 		log.Printf("Error fetching file list: %v", err)
 		return nil
 	}
-	if len(fileList.Items) != 1 {
+	if len(fileList.Items) > 1 {
 		log.Printf("Folder name %v is ambiguous, found %d matches", name, len(fileList.Items))
 		return nil
+	} else if len(fileList.Items) == 0 {
+		return nil
 	}
+
 	return fileList.Items[0]
 }
