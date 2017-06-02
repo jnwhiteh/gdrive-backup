@@ -29,13 +29,14 @@ func main() {
 		log.Fatalf("Failed to create Drive client: %v", err)
 	}
 
-	remoteFolder := findFolder(service, *remoteFolderName)
-	if remoteFolder == nil {
+	gclient := NewDriveClient(*secretFile, "gdrive-backup", *debug)
+	remoteFolder, err := gclient.GetFolderByTitle(*remoteFolderName)
+	if err == ErrFolderNotFound {
 		if *createRemote {
 			log.Printf("Creating new remote folder %s", *remoteFolderName)
 			remoteFolder, err = mkdir(service, *remoteFolderName, "")
 		}
-	} else {
+	} else if err != nil {
 		fmt.Printf("Found folder: %v", remoteFolder)
 	}
 

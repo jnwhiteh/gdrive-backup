@@ -60,7 +60,7 @@ func NewOAuthConfig(credentials clientCredentials, scope string) *oauth.Config {
 }
 
 // New OAuthClient creates a new client against the Google OAuth2 API
-func NewOAuthClient(appName string, debug bool, config *oauth.Config) *http.Client {
+func NewOAuthClient(appName string, debug bool, config *oauth.Config, transport http.RoundTripper) *http.Client {
 	cacheFile := tokenCacheFilename(appName, config)
 	token, err := tokenFromFile(cacheFile)
 	if err != nil {
@@ -73,7 +73,7 @@ func NewOAuthClient(appName string, debug bool, config *oauth.Config) *http.Clie
 	t := &oauth.Transport{
 		Token:     token,
 		Config:    config,
-		Transport: condDebugTransport(debug, http.DefaultTransport),
+		Transport: condDebugTransport(debug, transport),
 	}
 	return t.Client()
 }
